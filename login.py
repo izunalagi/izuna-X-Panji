@@ -40,13 +40,7 @@ def login_anggota():
 
     if username == "admin" and password == "123":
         print("Halo admin ! ")
-        main()
-        tampilkan_daftar_padi()
-        tambah_harga_padi()
-        edit_harga_padi()
-        hapus_harga_padi()
-        baca_dari_csv()
-        simpan_ke_csv()
+        menu_fungsi_admin()
 
     data_regis = []
     with open("try.csv", "r") as file:
@@ -59,7 +53,7 @@ def login_anggota():
         if username == i["username"] and password == i["password"]:
             data_login.append(i)
             print("login berhasil")
-            main_tambah()
+            menu_fungsi_member()
 
         if len(data_login) == 0:
             print("akun tidak ditemukan")
@@ -101,12 +95,12 @@ def main():
     while True:
         tampilkan_daftar_padi(harga_padi_df)
 
-        print("\nMenu:")
+        print("Menu:")
         print("1. Tambah Jenis Padi dan Harga Bibit")
         print("2. Simpan Data")
         print("3. Edit Harga Padi")
         print("4. Hapus Jenis Padi")
-        print("5. Keluar")
+        print("5. Kembali")
         pilihan = input("Pilih menu (1/2/3/4/5): ")
 
         if pilihan == "1":
@@ -124,7 +118,7 @@ def main():
             jenis_padi = input("Masukkan jenis padi yang ingin dihapus: ")
             harga_padi_df = hapus_harga_padi(harga_padi_df, jenis_padi)
         elif pilihan == "5":
-            menu_login()
+            menu_fungsi_admin()
         else:
             print("Pilihan tidak valid. Silakan coba lagi.")
 
@@ -144,14 +138,11 @@ def baca_dari_csv(nama_berkas):
 def main_tambah():
     nama_berkas = "list_padi.csv"
     harga_padi_df = baca_dari_csv(nama_berkas)
-    while True:
-        tampilkan_daftar_padi(harga_padi_df)
-
-        print("1. Keluar")
-        ayam = input("pilih 1 untuk keluar : ")
-
-        if ayam == "1":
-            menu_login()
+    tampilkan_daftar_padi(harga_padi_df)
+    print("1. Kembali")
+    memilih = input("masukkan pilihan : ")
+    if memilih == 1:
+        menu_fungsi_member()
 
 
 def baca_dari_csv(nama_berkas):
@@ -173,4 +164,36 @@ def menu_login():
         login_anggota()
 
 
-print(menu_login())
+def menu_fungsi_admin():
+    print("1.Informasi Padi")
+    print("2. Kalkulasi Data")
+    memilih = input("Pilih (1/2) : ")
+
+    if memilih == "1":
+        main()
+        tampilkan_daftar_padi()
+        tambah_harga_padi()
+        edit_harga_padi()
+        hapus_harga_padi()
+        baca_dari_csv()
+        simpan_ke_csv()
+    elif memilih == "2":
+        print("fitur belum tersedia.")
+    else:
+        print("piliha tidak ditemukan.")
+
+
+def menu_fungsi_member():
+    print("1. Informasi Padi")
+    print("2. Hasil Kalkulasi Data")
+    memilih = input("Pilih (1/2) : ")
+
+    if memilih == "1":
+        main_tambah()
+    elif memilih == "2":
+        print("fungsi belum tersedia")
+    else:
+        print("masukkan pilihan yang tersedia")
+
+
+menu_login()
