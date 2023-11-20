@@ -14,8 +14,8 @@ def register_anggota():
     while password_check == False:
         password = getpass("masukkan password anda : ", stream=None)
         password_confirm = getpass("**ulangi password anda : ", stream=None)
-        if password!=password_confirm:
-            print('pasword tidak sesuai!')
+        if password != password_confirm:
+            print("pasword tidak sesuai!")
             password_check = False
         elif password == password_confirm:
             password_check = True
@@ -764,28 +764,32 @@ def tampilkan_tabel_admin(nama_file):
 
 
 # ================fungsi hapus member===================
-def tambah_member(username, password):
-    new = {"username" : [username],
-            "password" : [password]}
-    df = pd.DataFrame(new)
-    df.to_csv("data_csv/data_login.csv", index=False, header=False)
-
-    print("Data berhasil ditambahkan!")
-    enter = input("klik enter untuk melanjutkan...")
-    print(enter, menu_fungsi_admin())
-
-def hapus_member():
-    username = 'belum ada bang!!!!'
-    print(username)
-    enter = input("klik enter untuk melanjutkan...")
-    print(enter, menu_fungsi_admin())
-
 def tampilkan_tabel_member():
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
+    df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     print("Tabel Keseluruhan:")
     print(tabulate(df, headers="keys", tablefmt="psql", showindex=False))
     menu_tabel_member()
+
+
+def tambah_member(username, password):
+    df = pd.read_csv("data_csv/data_login.csv")
+    df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
+    new_member = pd.DataFrame({"username": [username], "password": [password]})
+    df = pd.concat([df, new_member], ignore_index=True)
+    df.to_csv("data_csv/data_login.csv", index=False)
+
+
+def hapus_member(username):
+    df = pd.read_csv("data_csv/data_login.csv")
+    df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
+    if "username" in df.columns:
+        df = df[df["username"] != username]
+        df.to_csv("data_csv/data_login.csv", index=False)
+    else:
+        print("Column 'username' not found in the DataFrame.")
+
 
 def menu_tabel_member():
     print("1. Tambah Member")
@@ -794,15 +798,22 @@ def menu_tabel_member():
     memilih = input("pilih opsi : ")
     while True:
         if memilih == "1":
-            username = input('masukan username:')
-            password = input('masukan password:')
+            username = input("masukan username:")
+            password = input("masukan password:")
             tambah_member(username, password)
-        elif memilih =="2":
-            hapus_member()
+            tampilkan_tabel_member()
+            break
+        elif memilih == "2":
+            username = input("masukan username yang ingin dihapus:")
+            hapus_member(username)
+            tampilkan_tabel_member()
+            break
         elif memilih == "3":
             menu_fungsi_admin()
-
+            break
         else:
             print("Opsi tidak ditemukan")
             input("Tekan Enter Untuk Mengulang...")
+
+
 menu_login()
