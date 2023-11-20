@@ -10,7 +10,15 @@ from getpass import getpass
 def register_anggota():
     os.system("cls")
     username = input("masukkan username anda : ")
-    password = getpass("masukkan password anda : ", stream=None)
+    password_check = False
+    while password_check == False:
+        password = getpass("masukkan password anda : ", stream=None)
+        password_confirm = getpass("**ulangi password anda : ", stream=None)
+        if password!=password_confirm:
+            print('pasword tidak sesuai!')
+            password_check = False
+        elif password == password_confirm:
+            password_check = True
 
     data_regis = []
     with open("data_csv/data_login.csv", "r") as file:
@@ -42,7 +50,7 @@ def register_anggota():
 def login_admin():
     os.system("cls")
     username = input("masukkan username anda : ")
-    password = input("masukkan password anda : ")
+    password = getpass("masukkan password anda : ")
 
     data_regis = []
     with open("data_csv/admin_login.csv", "r") as file:
@@ -65,7 +73,7 @@ def login_admin():
 def login_anggota():
     os.system("cls")
     username = input("masukkan username anda : ")
-    password = input("masukkan password anda : ")
+    password = getpass("masukkan password anda : ")
 
     data_regis = []
     with open("data_csv/data_login.csv", "r") as file:
@@ -756,6 +764,22 @@ def tampilkan_tabel_admin(nama_file):
 
 
 # ================fungsi hapus member===================
+def tambah_member(username, password):
+    new = {"username" : [username],
+            "password" : [password]}
+    df = pd.DataFrame(new)
+    df.to_csv("data_csv/data_login.csv", index=False, header=False)
+
+    print("Data berhasil ditambahkan!")
+    enter = input("klik enter untuk melanjutkan...")
+    print(enter, menu_fungsi_admin())
+
+def hapus_member():
+    username = 'belum ada bang!!!!'
+    print(username)
+    enter = input("klik enter untuk melanjutkan...")
+    print(enter, menu_fungsi_admin())
+
 def tampilkan_tabel_member():
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
@@ -763,16 +787,22 @@ def tampilkan_tabel_member():
     print(tabulate(df, headers="keys", tablefmt="psql", showindex=False))
     menu_tabel_member()
 
-
 def menu_tabel_member():
-    print("1. Kembali")
+    print("1. Tambah Member")
+    print("2. Hapus Member")
+    print("3. Kembali")
     memilih = input("pilih opsi : ")
     while True:
         if memilih == "1":
+            username = input('masukan username:')
+            password = input('masukan password:')
+            tambah_member(username, password)
+        elif memilih =="2":
+            hapus_member()
+        elif memilih == "3":
             menu_fungsi_admin()
+
         else:
             print("Opsi tidak ditemukan")
             input("Tekan Enter Untuk Mengulang...")
-
-
 menu_login()
