@@ -112,7 +112,71 @@ def menu_login():
         print("Masukkan Pilihan yang tepat")
 
 
-# menu fungsi informasi untuk admin
+# menu fungsi pada admin
+def menu_fungsi_admin():
+    os.system("cls")
+    namafile = "data_txt/menu_admin.txt"
+    with open(namafile, "r") as file:
+        isi_file = file.read()
+        print(isi_file)
+
+    while True:
+        memilih = input("Pilih (1/2/3/4) : ")
+
+        if memilih == "1":
+            main()
+            tampilkan_daftar_padi()
+            tambah_harga_padi()
+            edit_harga_padi()
+            hapus_harga_padi()
+            baca_dari_csv()
+            simpan_ke_csv()
+        elif memilih == "2":
+            tampilkan_tabel_admin("data_csv/hasil_kalkulasi.csv")
+        elif memilih == "3":
+            tampilkan_tabel_member()
+        elif memilih == "4":
+            question = input("apakah anda yakin untuk keluar aplikasi ? (y/n)")
+            if question == "y":
+                print("Terimakasih sudah menggunakan aplikasi kami.")
+                sys.exit()
+            elif question == "n":
+                print("Melanjutkan aplikasi.")
+            else:
+                print("Masukkan pilihan yang tepat.")
+        else:
+            print("pilihan tidak ditemukan.")
+
+
+# menu fungsi pada member
+def menu_fungsi_member():
+    os.system("cls")
+    namafile = "data_txt/menu_member.txt"
+    with open(namafile, "r") as file:
+        isi_file = file.read()
+        print(isi_file)
+
+    while True:
+        memilih = input("Pilih menu (1/2/3): ")
+
+        if memilih == "1":
+            main_tambah()
+        elif memilih == "2":
+            tampilkan_tabel("data_csv/hasil_kalkulasi.csv")
+        elif memilih == "3":
+            question = input("Apakah anda yakin untuk keluar aplikasi? (y/n): ")
+            if question.lower() == "y":
+                print("Terimakasih sudah menggunakan aplikasi kami.")
+                sys.exit()
+            elif question.lower() == "n":
+                print("Melanjutkan aplikasi.")
+            else:
+                print("Masukkan pilihan yang tepat.")
+        else:
+            print("Masukkan pilihan yang tersedia. Mohon masukkan opsi yang tepat.")
+
+
+# menu fungsi informasi harga padi untuk admin
 def main():
     os.system("cls")
     nama_berkas = "data_csv/list1_padi.csv"
@@ -187,43 +251,7 @@ def main():
             print("Pilihan tidak valid. Silakan coba lagi.")
 
 
-# menu fungsi pada admin
-def menu_fungsi_admin():
-    os.system("cls")
-    namafile = "data_txt/menu_admin.txt"
-    with open(namafile, "r") as file:
-        isi_file = file.read()
-        print(isi_file)
-
-    while True:
-        memilih = input("Pilih (1/2/3/4) : ")
-
-        if memilih == "1":
-            main()
-            tampilkan_daftar_padi()
-            tambah_harga_padi()
-            edit_harga_padi()
-            hapus_harga_padi()
-            baca_dari_csv()
-            simpan_ke_csv()
-        elif memilih == "2":
-            tampilkan_tabel_admin("data_csv/hasil_kalkulasi.csv")
-        elif memilih == "3":
-            tampilkan_tabel_member()
-        elif memilih == "4":
-            question = input("apakah anda yakin untuk keluar aplikasi ? (y/n)")
-            if question == "y":
-                print("Terimakasih sudah menggunakan aplikasi kami.")
-                sys.exit()
-            elif question == "n":
-                print("Melanjutkan aplikasi.")
-            else:
-                print("Masukkan pilihan yang tepat.")
-        else:
-            print("pilihan tidak ditemukan.")
-
-
-# menu informasi untuk member
+# menu informasi harga padi untuk member
 def main_tambah():
     os.system("cls")
     nama_berkas = "data_csv/list1_padi.csv"
@@ -244,34 +272,6 @@ def main_tambah():
             menu_fungsi_member()
         else:
             print("Masukkan pilihan yang tepat")
-
-
-# menu fungsi pada member
-def menu_fungsi_member():
-    os.system("cls")
-    namafile = "data_txt/menu_member.txt"
-    with open(namafile, "r") as file:
-        isi_file = file.read()
-        print(isi_file)
-
-    while True:
-        memilih = input("Pilih menu (1/2/3): ")
-
-        if memilih == "1":
-            main_tambah()
-        elif memilih == "2":
-            tampilkan_tabel("data_csv/hasil_kalkulasi.csv")
-        elif memilih == "3":
-            question = input("Apakah anda yakin untuk keluar aplikasi? (y/n): ")
-            if question.lower() == "y":
-                print("Terimakasih sudah menggunakan aplikasi kami.")
-                sys.exit()
-            elif question.lower() == "n":
-                print("Melanjutkan aplikasi.")
-            else:
-                print("Masukkan pilihan yang tepat.")
-        else:
-            print("Masukkan pilihan yang tersedia. Mohon masukkan opsi yang tepat.")
 
 
 # ========================PADI======================
@@ -607,6 +607,7 @@ def main_pestisida_tambah():
 # ... (Kode lainnya seperti yang sudah Anda bagikan sebelumnya) ...
 
 
+# fungsi menyimpan data kalkulasi
 def simpan_hasil_kalkulasi(
     jenis_padi,
     jumlah_bibit,
@@ -634,6 +635,7 @@ def simpan_hasil_kalkulasi(
         )
 
 
+# fungsi menghitung total
 def kalkulasi_total(
     data_padi_df,
     data_pupuk_df,
@@ -643,7 +645,6 @@ def kalkulasi_total(
     jumlah_pupuk,
     jumlah_pestisida,
     biaya_sdm,
-    nama_file="data_csv/hasil_kalkulasi.csv",
 ):
     os.system("cls")
     if jenis_padi in data_padi_df["Jenis Padi"].values:
@@ -678,6 +679,7 @@ def kalkulasi_total(
         return None
 
 
+# fungsi menghitung keuntungan
 def main_kalkulasi():
     os.system("cls")
     data_padi_df = pd.read_csv("data_csv/list1_padi.csv")
@@ -722,6 +724,7 @@ def main_kalkulasi():
     tampilkan_tabel_admin("data_csv/hasil_kalkulasi.csv")
 
 
+# tabel kalkulasi untuk member
 def tampilkan_tabel(nama_file):
     os.system("cls")
     try:
@@ -741,6 +744,7 @@ def tampilkan_tabel(nama_file):
         tampilkan_tabel(nama_file)
 
 
+# tabel Kalkulasi untuk admin
 def tampilkan_tabel_admin(nama_file):
     os.system("cls")
     try:
@@ -764,6 +768,7 @@ def tampilkan_tabel_admin(nama_file):
 
 
 # ================fungsi hapus member===================
+# tabel data akun member
 def tampilkan_tabel_member():
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
@@ -773,6 +778,7 @@ def tampilkan_tabel_member():
     menu_tabel_member()
 
 
+# fungsi tambah data akun member
 def tambah_member(username, password):
     df = pd.read_csv("data_csv/data_login.csv")
     df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
@@ -781,6 +787,7 @@ def tambah_member(username, password):
     df.to_csv("data_csv/data_login.csv", index=False)
 
 
+# fungsi hapus data akun member
 def hapus_member(username):
     df = pd.read_csv("data_csv/data_login.csv")
     df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
@@ -791,6 +798,7 @@ def hapus_member(username):
         print("Column 'username' not found in the DataFrame.")
 
 
+# menu pada data member
 def menu_tabel_member():
     print("1. Tambah Member")
     print("2. Hapus Member")
