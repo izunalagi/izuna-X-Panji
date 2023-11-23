@@ -176,6 +176,7 @@ def menu_fungsi_member():
             print("Masukkan pilihan yang tersedia. Mohon masukkan opsi yang tepat.")
 
 
+# ========================PADI======================
 # menu fungsi informasi harga padi untuk admin
 def main():
     os.system("cls")
@@ -274,7 +275,104 @@ def main_tambah():
             print("Masukkan pilihan yang tepat")
 
 
-# ========================PADI======================
+# menu fungsi informasi harga padi untuk admin
+def main():
+    os.system("cls")
+    nama_berkas = "data_csv/list1_padi.csv"
+
+    data_padi_df = baca_dari_csv(nama_berkas)
+
+    tampilkan_daftar_padi(data_padi_df)
+
+    print("Menu:")
+    print("1. Tambah Jenis Padi dan Harga Bibit")
+    print("2. Edit Harga Padi")
+    print("3. Hapus Jenis Padi")
+    print("4. Informasi Pupuk")
+    print("5. Informasi pestisida")
+    print("6. Kembali")
+
+    while True:
+        pilihan = input("Pilih menu (1/2/3/4/5/6/7): ")
+
+        if pilihan == "1":
+            jenis_padi = input("Masukkan jenis padi: ")
+            harga_bibit = float(input("Masukkan harga bibit: "))
+            potensi_hasil = float(input("Masukkan potensi hasil: "))
+            musim = input("Masukkan musim: ")
+            umur = input("Masukkan umur: ")
+            data_padi_df = tambah_harga_padi(
+                data_padi_df, jenis_padi, harga_bibit, potensi_hasil, musim, umur
+            )
+            simpan_ke_csv(data_padi_df, nama_berkas)
+            print("Data telah disimpan.")
+            input("klik enter untuk melanjutkan...")
+            main()
+        elif pilihan == "2":
+            jenis_padi = input("Masukkan jenis padi yang ingin diedit: ")
+            harga_bibit = float(input("Masukkan harga bibit baru: "))
+            potensi_hasil = float(input("Masukkan potensi hasil baru: "))
+            musim = input("Masukkan musim baru: ")
+            umur = input("Masukkan umur baru: ")
+            data_padi_df = edit_harga_padi(
+                data_padi_df, jenis_padi, harga_bibit, potensi_hasil, musim, umur
+            )
+            simpan_ke_csv(data_padi_df, nama_berkas)
+            print("Data telah diedit")
+            input("Klik enter untuk melanjutkan...")
+            main()
+        elif pilihan == "3":
+            jenis_padi = input("Masukkan jenis padi yang ingin dihapus: ")
+            data_padi_df = hapus_harga_padi(data_padi_df, jenis_padi)
+            simpan_ke_csv(data_padi_df, nama_berkas)
+            print("Data telah dihapus")
+            input("Klik enter unutk melanjutkan...")
+            main()
+        elif pilihan == "4":
+            main_pupuk()
+            tampilkan_daftar_pupuk()
+            tambah_harga_pupuk()
+            edit_harga_pupuk()
+            hapus_harga_pupuk()
+            baca_dari_csv_pupuk()
+            simpan_ke_csv_pupuk()
+        elif pilihan == "5":
+            main_pestisida()
+            tampilkan_daftar_pestisida()
+            tambah_harga_pestisida()
+            edit_harga_pestisida()
+            hapus_harga_pestisida()
+            baca_dari_csv_pestisida()
+            simpan_ke_csv_pestisida()
+        elif pilihan == "6":
+            menu_fungsi_admin()
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.")
+
+
+# menu informasi harga padi untuk member
+def main_tambah():
+    os.system("cls")
+    nama_berkas = "data_csv/list1_padi.csv"
+    data_padi_df = baca_dari_csv(nama_berkas)
+
+    tampilkan_daftar_padi(data_padi_df)
+    print("1. Informasi Pupuk")
+    print("2. Informasi Pestisida")
+    print("3. Kembali")
+
+    while True:
+        memilih = input("masukkan pilihan : ")
+        if memilih == "1":
+            main_pupuk_tambah()
+        elif memilih == "2":
+            main_pestisida_tambah()
+        if memilih == "3":
+            menu_fungsi_member()
+        else:
+            print("Masukkan pilihan yang tepat")
+
+
 # membaca data yang ada di csv
 def baca_dari_csv(nama_berkas):
     os.system("cls")
@@ -777,6 +875,7 @@ def tampilkan_tabel_member():
     print(tabulate(df, headers="keys", tablefmt="psql", showindex=False))
     menu_tabel_member()
 
+
 # fungsi tambah data akun member
 def tambah_member(username, password):
     df = pd.read_csv("data_csv/data_login.csv")
@@ -784,6 +883,7 @@ def tambah_member(username, password):
     new_member = pd.DataFrame({"username": [username], "password": [password]})
     df = pd.concat([df, new_member], ignore_index=True)
     df.to_csv("data_csv/data_login.csv", index=False)
+
 
 # fungsi hapus data akun member
 def hapus_member(username):
@@ -794,6 +894,7 @@ def hapus_member(username):
         df.to_csv("data_csv/data_login.csv", index=False)
     else:
         print("Column 'username' not found in the DataFrame.")
+
 
 # menu pada data member
 def menu_tabel_member():
@@ -819,5 +920,6 @@ def menu_tabel_member():
         else:
             print("Opsi tidak ditemukan")
             input("Tekan Enter Untuk Mengulang...")
+
 
 menu_login()
