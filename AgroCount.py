@@ -411,9 +411,9 @@ def main_pupuk():
     tampilkan_daftar_pupuk(data_pupuk_df)
 
     print("Menu:")
-    print("1. Tambah Jenis Padi dan Harga Bibit")
-    print("2. Edit Harga Padi")
-    print("3. Hapus Jenis Padi")
+    print("1. Tambah Jenis Padi, Pupuk dan Harga Pupuk")
+    print("2. Edit Harga Pupuk")
+    print("3. Hapus Jenis Pupuk")
     print("4. Kembali")
 
     while True:
@@ -777,7 +777,6 @@ def tampilkan_tabel_member():
     print(tabulate(df, headers="keys", tablefmt="psql", showindex=False))
     menu_tabel_member()
 
-
 # fungsi tambah data akun member
 def tambah_member(username, password):
     df = pd.read_csv("data_csv/data_login.csv")
@@ -785,7 +784,6 @@ def tambah_member(username, password):
     new_member = pd.DataFrame({"username": [username], "password": [password]})
     df = pd.concat([df, new_member], ignore_index=True)
     df.to_csv("data_csv/data_login.csv", index=False)
-
 
 # fungsi hapus data akun member
 def hapus_member(username):
@@ -796,7 +794,6 @@ def hapus_member(username):
         df.to_csv("data_csv/data_login.csv", index=False)
     else:
         print("Column 'username' not found in the DataFrame.")
-
 
 # menu pada data member
 def menu_tabel_member():
@@ -822,6 +819,5 @@ def menu_tabel_member():
         else:
             print("Opsi tidak ditemukan")
             input("Tekan Enter Untuk Mengulang...")
-
 
 menu_login()
