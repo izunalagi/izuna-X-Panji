@@ -7,13 +7,13 @@ from getpass import getpass
 
 
 # fungsi registrasi member
-def register_anggota():
+def register_anggota(): 
     os.system("cls")
     username = input("masukkan username anda : ")
     password_check = False
     while password_check == False:
-        password = getpass("masukkan password anda : ", stream=None)
-        password_confirm = getpass("**ulangi password anda : ", stream=None)
+        password = getpass("masukkan password anda : ")
+        password_confirm = getpass("**ulangi password anda : ")
         if password != password_confirm:
             print("pasword tidak sesuai!")
             password_check = False
@@ -67,6 +67,9 @@ def login_admin():
 
     if len(data_login) == 0:
         print("akun tidak ditemukan")
+        input("Klik Enter Untuk Ulang...")
+        menu_login()
+
 
 
 # login member
@@ -90,6 +93,8 @@ def login_anggota():
 
     if len(data_login) == 0:
         print("akun tidak ditemukan")
+        input("Klik Enter Untuk Ulang...")
+        menu_login()
 
 
 # menu login
@@ -269,13 +274,10 @@ def main_tambah():
             main_pupuk_tambah()
         elif memilih == "2":
             main_pestisida_tambah()
-        if memilih == "3":
+        elif memilih == "3":
             menu_fungsi_member()
         else:
             print("Masukkan pilihan yang tepat")
-
-
-
 
 # membaca data yang ada di csv
 def baca_dari_csv(nama_berkas):
@@ -386,7 +388,7 @@ def edit_harga_pupuk(df, padi, pupuk, harga_pupuk):
     return df
 
 
-# fungsi hapus data pada tabel
+# fungsi hapus data pada tabels
 def hapus_harga_pupuk(df, padi):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
@@ -544,8 +546,8 @@ def main_pestisida():
 
     print("Menu:")
     print("1. Tambah Jenis Padi dan Harga Bibit")
-    print("2. Edit Harga Padi")
-    print("3. Hapus Jenis Padi")
+    print("2. Edit Harga Pestisida")
+    print("3. Hapus Jenis Pestisida")
     print("4. Kembali")
     while True:
         pilihan = input("Pilih menu (1/2/3/4): ")
@@ -776,12 +778,13 @@ def tampilkan_tabel_member():
     df = pd.read_csv("data_csv/data_login.csv")
     df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     print("Tabel Keseluruhan:")
-    print(tabulate(df, headers="keys", tablefmt="psql", showindex=False))
+    print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
     menu_tabel_member()
 
 
 # fungsi tambah data akun member
 def tambah_member(username, password):
+    os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
     df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     new_member = pd.DataFrame({"username": [username], "password": [password]})
@@ -791,6 +794,7 @@ def tambah_member(username, password):
 
 # fungsi hapus data akun member
 def hapus_member(username):
+    os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
     df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     if "username" in df.columns:
@@ -826,4 +830,4 @@ def menu_tabel_member():
             input("Tekan Enter Untuk Mengulang...")
 
 
-menu_login()
+menu_login() 
