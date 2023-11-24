@@ -768,7 +768,9 @@ def tampilkan_tabel_admin(nama_file):
     elif memilih == "2":
         menu_fungsi_admin()
     else:
-        tampilkan_tabel(nama_file)
+        print("opsi tidak ditemukan")
+        input("Klik enter untuk memilih ulang...")
+        tampilkan_tabel_admin(nama_file)
 
 
 # ================fungsi hapus member===================
@@ -776,7 +778,6 @@ def tampilkan_tabel_admin(nama_file):
 def tampilkan_tabel_member():
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
-    df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     print("Tabel Keseluruhan:")
     print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
     menu_tabel_member()
@@ -786,7 +787,6 @@ def tampilkan_tabel_member():
 def tambah_member(username, password):
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
-    df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     new_member = pd.DataFrame({"username": [username], "password": [password]})
     df = pd.concat([df, new_member], ignore_index=True)
     df.to_csv("data_csv/data_login.csv", index=False)
@@ -796,12 +796,11 @@ def tambah_member(username, password):
 def hapus_member(username):
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
-    df.columns = map(str.lower, df.columns)  # Convert column names to lowercase
     if "username" in df.columns:
         df = df[df["username"] != username]
         df.to_csv("data_csv/data_login.csv", index=False)
     else:
-        print("Column 'username' not found in the DataFrame.")
+        print("Tidak ditemukan.")
 
 
 # menu pada data member
@@ -824,10 +823,11 @@ def menu_tabel_member():
             break
         elif memilih == "3":
             menu_fungsi_admin()
-            break
         else:
             print("Opsi tidak ditemukan")
             input("Tekan Enter Untuk Mengulang...")
+            tampilkan_tabel_member()
+            menu_tabel_member()
 
 
 menu_login() 
