@@ -7,7 +7,7 @@ from getpass import getpass
 
 
 # fungsi registrasi member
-def register_anggota(): 
+def register_anggota():
     os.system("cls")
     username = input("masukkan username anda : ")
     password_check = False
@@ -69,7 +69,6 @@ def login_admin():
         print("akun tidak ditemukan")
         input("Klik Enter Untuk Ulang...")
         menu_login()
-
 
 
 # login member
@@ -186,9 +185,7 @@ def menu_fungsi_member():
 def main():
     os.system("cls")
     nama_berkas = "data_csv/list1_padi.csv"
-
     data_padi_df = baca_dari_csv(nama_berkas)
-
     tampilkan_daftar_padi(data_padi_df)
 
     print("Menu:")
@@ -212,9 +209,8 @@ def main():
                 data_padi_df, jenis_padi, harga_bibit, potensi_hasil, musim, umur
             )
             simpan_ke_csv(data_padi_df, nama_berkas)
-            print("Data telah disimpan.")
-            input("klik enter untuk melanjutkan...")
             main()
+
         elif pilihan == "2":
             jenis_padi = input("Masukkan jenis padi yang ingin diedit: ")
             harga_bibit = float(input("Masukkan harga bibit baru: "))
@@ -279,6 +275,7 @@ def main_tambah():
         else:
             print("Masukkan pilihan yang tepat")
 
+
 # membaca data yang ada di csv
 def baca_dari_csv(nama_berkas):
     os.system("cls")
@@ -304,14 +301,22 @@ def tampilkan_daftar_padi(df):
 # fungsi menambahkan data dari tabel
 def tambah_harga_padi(df, jenis_padi, harga_bibit, potensi_hasil, musim, umur):
     os.system("cls")
-    new_data = {
-        "Jenis Padi": jenis_padi,
-        "Harga Bibit": harga_bibit,
-        "Potensi Hasil": potensi_hasil,
-        "Musim": musim,
-        "Umur": umur,
-    }
-    df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+    if jenis_padi in df["Jenis Padi"].values:
+        print(f"{jenis_padi} sudah ada dalam daftar harga padi.")
+        input("klik enter untuk mengulang...")
+        main()
+    else:
+        new_data = {
+            "Jenis Padi": jenis_padi,
+            "Harga Bibit": harga_bibit,
+            "Potensi Hasil": potensi_hasil,
+            "Musim": musim,
+            "Umur": umur,
+        }
+        df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+        print(f"{jenis_padi} berhasil ditambahkan ke dalam daftar harga padi.")
+        input("klik enter untuk melanjutkan...")
+
     return df
 
 
@@ -366,12 +371,20 @@ def tampilkan_daftar_pupuk(df):
 # fungsi menambahkan data dari tabel
 def tambah_harga_pupuk(df, padi, pupuk, harga_pupuk):
     os.system("cls")
-    new_data = {
-        "Jenis Padi": padi,
-        "Pupuk": pupuk,
-        "Harga Pupuk": harga_pupuk,
-    }
-    df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+    if padi in df["Jenis Padi"].values:
+        print(f"{padi} sudah ada dalam tabel,masukkan jenis padi yang berbeda..")
+        input("Klik enter untuk mengulang...")
+        main_pupuk()
+    else:
+        new_data = {
+            "Jenis Padi": padi,
+            "Pupuk": pupuk,
+            "Harga Pupuk": harga_pupuk,
+        }
+        df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+        print(f"{padi} berhasil ditambahkan ke dalam daftar harga pupuk.")
+        input("Klik enter untuk melanjutkan")
+
     return df
 
 
@@ -409,9 +422,7 @@ def simpan_ke_csv_pupuk(df, nama_file):
 def main_pupuk():
     os.system("cls")
     nama_file = "data_csv/pupuk_padi.csv"
-
     data_pupuk_df = baca_dari_csv_pupuk(nama_file)
-
     tampilkan_daftar_pupuk(data_pupuk_df)
 
     print("Menu:")
@@ -429,9 +440,8 @@ def main_pupuk():
             harga_pupuk = float(input("Masukkan harga pupuk : "))
             data_pupuk_df = tambah_harga_pupuk(data_pupuk_df, padi, pupuk, harga_pupuk)
             simpan_ke_csv_pupuk(data_pupuk_df, nama_file)
-            print("Data telah disimpan.")
-            input("Klik enter untuk melanjutkan")
             main_pupuk()
+
         elif pilihan == "2":
             padi = input("Masukkan jenis padi yang ingin diedit: ")
             pupuk = input("Masukkan pupuk baru: ")
@@ -496,12 +506,19 @@ def tampilkan_daftar_pestisida(df):
 # fungsi menambahkan data dari tabel
 def tambah_harga_pestisida(df, padi, pestisida, harga_pestisida):
     os.system("cls")
-    new_data = {
-        "Jenis Padi": padi,
-        "Pestisida": pestisida,
-        "Harga Pestisida": harga_pestisida,
-    }
-    df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+    if padi in df["Jenis Padi"].values:
+        print(f"{padi} sudah ada dalam daftar harga pestisida.")
+        input("Klik enter untuk mengulang...")
+        main_pestisida()
+    else:
+        new_data = {
+            "Jenis Padi": padi,
+            "Pestisida": pestisida,
+            "Harga Pestisida": harga_pestisida,
+        }
+        df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
+        print(f"{padi} berhasil ditambahkan ke dalam daftar harga pestisida.")
+        input("Klik enter untuk melanjutkan")
     return df
 
 
@@ -560,8 +577,6 @@ def main_pestisida():
                 data_pestisida_df, padi, pestisida, harga_pestisida
             )
             simpan_ke_csv_pestisida(data_pestisida_df, nama_file)
-            print("Data telah disimpan.")
-            input("klik enter untuk melanjutkan")
             main_pestisida()
         elif pilihan == "2":
             padi = input("Masukkan jenis padi yang ingin diedit : ")
@@ -608,9 +623,8 @@ def main_pestisida_tambah():
             print("Pilihan tidak valid. Silakan coba lagi.")
 
 
-# ... (Kode lainnya seperti yang sudah Anda bagikan sebelumnya) ...
-
-
+# KALKULASI
+# ==================================================================================================================
 # fungsi menyimpan data kalkulasi
 def simpan_hasil_kalkulasi(
     jenis_padi,
@@ -787,9 +801,16 @@ def tampilkan_tabel_member():
 def tambah_member(username, password):
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
-    new_member = pd.DataFrame({"username": [username], "password": [password]})
-    df = pd.concat([df, new_member], ignore_index=True)
-    df.to_csv("data_csv/data_login.csv", index=False)
+    if username in df["username"].values:
+        print(f"Username {username} sudah terdaftar. Masukkan username yang berbeda.")
+        input("Klik enter untuk mengulang...")
+        tampilkan_tabel_member()
+    else:
+        new_member = pd.DataFrame({"username": [username], "password": [password]})
+        df = pd.concat([df, new_member], ignore_index=True)
+        df.to_csv("data_csv/data_login.csv", index=False)
+        print(f"Akun dengan username {username} berhasil ditambahkan.")
+        input("Klik enter untuk melanjutkan...")
 
 
 # fungsi hapus data akun member
@@ -830,4 +851,4 @@ def menu_tabel_member():
             menu_tabel_member()
 
 
-menu_login() 
+menu_login()
