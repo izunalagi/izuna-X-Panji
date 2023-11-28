@@ -2,7 +2,6 @@ import csv
 import pandas as pd
 from tabulate import tabulate
 import os
-import sys
 from getpass import getpass
 
 
@@ -124,7 +123,8 @@ def menu_fungsi_admin():
         isi_file = file.read()
         print(isi_file)
 
-    while True:
+    ulang = 1
+    while ulang == 1:
         memilih = input("Pilih (1/2/3/4) : ")
 
         if memilih == "1":
@@ -143,7 +143,7 @@ def menu_fungsi_admin():
             question = input("apakah anda yakin untuk keluar aplikasi ? (y/n)")
             if question == "y":
                 print("Terimakasih sudah menggunakan aplikasi kami.")
-                sys.exit()
+                ulang = 0
             elif question == "n":
                 print("Melanjutkan aplikasi.")
             else:
@@ -160,7 +160,8 @@ def menu_fungsi_member():
         isi_file = file.read()
         print(isi_file)
 
-    while True:
+    ulang = 1
+    while ulang == 1:
         memilih = input("Pilih menu (1/2/3): ")
 
         if memilih == "1":
@@ -171,7 +172,7 @@ def menu_fungsi_member():
             question = input("Apakah anda yakin untuk keluar aplikasi? (y/n): ")
             if question.lower() == "y":
                 print("Terimakasih sudah menggunakan aplikasi kami.")
-                sys.exit()
+                ulang = 0
             elif question.lower() == "n":
                 print("Melanjutkan aplikasi.")
             else:
