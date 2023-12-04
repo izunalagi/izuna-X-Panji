@@ -142,6 +142,7 @@ def menu_fungsi_admin():
         elif memilih == "4":
             question = input("apakah anda yakin untuk keluar aplikasi ? (y/n)")
             if question == "y":
+                os.system("cls")
                 print("Terimakasih sudah menggunakan aplikasi kami.")
                 sys.exit()
             elif question == "n":
@@ -170,6 +171,7 @@ def menu_fungsi_member():
         elif memilih == "3":
             question = input("Apakah anda yakin untuk keluar aplikasi? (y/n): ")
             if question.lower() == "y":
+                os.system("cls")
                 print("Terimakasih sudah menggunakan aplikasi kami.")
                 sys.exit()
             elif question.lower() == "n":
@@ -197,12 +199,22 @@ def main():
     print("6. Kembali")
 
     while True:
-        pilihan = input("Pilih menu (1/2/3/4/5/6/7): ")
-
+        pilihan = input("Pilih menu (1/2/3/4/5/6): ")
         if pilihan == "1":
             jenis_padi = input("Masukkan jenis padi: ")
-            harga_bibit = float(input("Masukkan harga bibit: "))
-            potensi_hasil = float(input("Masukkan potensi hasil: "))
+            while True:
+                try:
+                    harga_bibit = float(input("Masukkan harga bibit: "))
+                    break
+                except ValueError:
+                    print("Error: Harga bibit harus berupa angka.")
+
+            while True:
+                try:
+                    potensi_hasil = float(input("Masukkan potensi hasil: "))
+                    break
+                except ValueError:
+                    print("Error: Potensi hasil harus berupa angka.")
             musim = input("Masukkan musim: ")
             umur = input("Masukkan umur: ")
             data_padi_df = tambah_harga_padi(
@@ -213,8 +225,19 @@ def main():
 
         elif pilihan == "2":
             jenis_padi = input("Masukkan jenis padi yang ingin diedit: ")
-            harga_bibit = float(input("Masukkan harga bibit baru: "))
-            potensi_hasil = float(input("Masukkan potensi hasil baru: "))
+            while True:
+                try:
+                    harga_bibit = float(input("Masukkan harga bibit baru : "))
+                    break
+                except ValueError:
+                    print("Error: Harga bibit harus berupa angka.")
+
+            while True:
+                try:
+                    potensi_hasil = float(input("Masukkan potensi hasil baru: "))
+                    break
+                except ValueError:
+                    print("Error: Potensi hasil harus berupa angka.")
             musim = input("Masukkan musim baru: ")
             umur = input("Masukkan umur baru: ")
             data_padi_df = edit_harga_padi(
@@ -432,12 +455,17 @@ def main_pupuk():
     print("4. Kembali")
 
     while True:
-        pilihan = input("Pilih menu (1/2/3/4/5): ")
+        pilihan = input("Pilih menu (1/2/3/4): ")
 
         if pilihan == "1":
             padi = input("Masukkan jenis padi: ")
             pupuk = input("Masukkan pupuk: ")
-            harga_pupuk = float(input("Masukkan harga pupuk : "))
+            while True:
+                try:
+                    harga_pupuk = float(input("Masukkan harga pupuk : "))
+                    break
+                except ValueError:
+                    print("Error: Harga pestisida harus berupa angka.")
             data_pupuk_df = tambah_harga_pupuk(data_pupuk_df, padi, pupuk, harga_pupuk)
             simpan_ke_csv_pupuk(data_pupuk_df, nama_file)
             main_pupuk()
@@ -445,7 +473,12 @@ def main_pupuk():
         elif pilihan == "2":
             padi = input("Masukkan jenis padi yang ingin diedit: ")
             pupuk = input("Masukkan pupuk baru: ")
-            harga_pupuk = float(input("Masukkan harga baru: "))
+            while True:
+                try:
+                    harga_pupuk = float(input("Masukkan harga pupuk baru : "))
+                    break
+                except ValueError:
+                    print("Error: Harga pestisida harus berupa angka.")
             data_pupuk_df = edit_harga_pupuk(data_pupuk_df, padi, pupuk, harga_pupuk)
             simpan_ke_csv_pupuk(data_pupuk_df, nama_file)
             print("Data telah diedit")
@@ -572,7 +605,12 @@ def main_pestisida():
         if pilihan == "1":
             padi = input("Masukkan jenis padi: ")
             pestisida = input("Masukkan pestisida : ")
-            harga_pestisida = float(input("Masukkan harga pestisida : "))
+            while True:
+                try:
+                    harga_pestisida = float(input("Masukkan harga pestisida : "))
+                    break
+                except ValueError:
+                    print("Error: Harga pestisida harus berupa angka.")
             data_pestisida_df = tambah_harga_pestisida(
                 data_pestisida_df, padi, pestisida, harga_pestisida
             )
@@ -581,7 +619,12 @@ def main_pestisida():
         elif pilihan == "2":
             padi = input("Masukkan jenis padi yang ingin diedit : ")
             pestisida = input("Masukkan pestisida baru: ")
-            harga_pestisida = float(input("Masukkan harga baru : "))
+            while True:
+                try:
+                    harga_pestisida = float(input("Masukkan harga pestisida : "))
+                    break
+                except ValueError:
+                    print("Error: Harga pestisida harus berupa angka.")
             data_pestisida_df = edit_harga_pestisida(
                 data_pestisida_df, padi, pestisida, harga_pestisida
             )
@@ -705,10 +748,30 @@ def main_kalkulasi():
     data_pestisida_df = pd.read_csv("data_csv/pestisida_padi.csv")
 
     jenis_padi = input("Masukkan jenis padi: ")
-    jumlah_bibit = int(input("Masukkan jumlah bibit: "))
-    jumlah_pupuk = int(input("Masukkan jumlah pupuk: "))
-    jumlah_pestisida = int(input("Masukkan jumlah pestisida: "))
-    biaya_sdm = float(input("Masukkan biaya SDM: "))
+    while True:
+        try:
+            jumlah_bibit = int(input("Masukkan jumlah bibit: "))
+            break
+        except ValueError:
+            print("Error: Jumlah bibit harus berupa angka")
+    while True:
+        try:
+            jumlah_pupuk = int(input("Masukkan jumlah pupuk: "))
+            break
+        except ValueError:
+            print("Error: Jumlah pupuk harus berupa angka")
+    while True:
+        try:
+            jumlah_pestisida = int(input("Masukkan jumlah pestisida: "))
+            break
+        except ValueError:
+            print("Error: Jumlah pestisida harus berupa angka")
+    while True:
+        try:
+            biaya_sdm = float(input("Masukkan biaya SDM: "))
+            break
+        except ValueError:
+            print("Error: Biaya SDM harus berupa angka")
 
     total_harga = kalkulasi_total(
         data_padi_df,
@@ -723,7 +786,12 @@ def main_kalkulasi():
 
     if total_harga is not None:
         print(f"Total Harga: {total_harga}")
-        harga_jual = float(input("Masukkan harga jual: "))
+        while True:
+            try:
+                harga_jual = float(input("Masukkan harga jual: "))
+                break
+            except ValueError:
+                print("Error: Harga jual harus berupa angka")
 
         keuntungan = harga_jual - total_harga
         print(f"Keuntungan: {keuntungan}")
@@ -740,6 +808,20 @@ def main_kalkulasi():
             "data_csv/hasil_kalkulasi.csv",
         )
     tampilkan_tabel_admin("data_csv/hasil_kalkulasi.csv")
+
+
+# hapus kalkulasi
+def hapus_kalkulasi(nama_file, indeks):
+    try:
+        df = pd.read_csv(nama_file)
+        if not df.empty:
+            df = df.drop(index=[indeks])
+            df.to_csv(nama_file, index=False)
+            print(f"Data kalkulasi pada indeks {indeks} telah dihapus.")
+        else:
+            print(f"File {nama_file} kosong.")
+    except FileNotFoundError:
+        print(f"File {nama_file} tidak ditemukan.")
 
 
 # tabel kalkulasi untuk member
@@ -775,11 +857,14 @@ def tampilkan_tabel_admin(nama_file):
         print(f"File {nama_file} tidak ditemukan.")
 
     print("1. mulai kalkulasi ")
-    print("2. Kembali")
+    print("2. Hapus kalkulasi")
+    print("3. Kembali")
     memilih = input("pilih opsi : ")
     if memilih == "1":
         main_kalkulasi()
     elif memilih == "2":
+        hapus_kalkulasi()
+    elif memilih == "3":
         menu_fungsi_admin()
     else:
         print("opsi tidak ditemukan")
