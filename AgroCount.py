@@ -3,6 +3,9 @@ import pandas as pd
 from tabulate import tabulate
 import os
 from getpass import getpass
+import sys
+
+print("kiarra cantik")
 
 
 # fungsi registrasi member
@@ -123,8 +126,7 @@ def menu_fungsi_admin():
         isi_file = file.read()
         print(isi_file)
 
-    ulang = 1
-    while ulang == 1:
+    while True:
         memilih = input("Pilih (1/2/3/4) : ")
 
         if memilih == "1":
@@ -140,11 +142,12 @@ def menu_fungsi_admin():
         elif memilih == "3":
             tampilkan_tabel_member()
         elif memilih == "4":
-            question = input("apakah anda yakin untuk keluar aplikasi ? (y/n)")
+            question = input("apakah anda yakin untuk keluar aplikasi ? (y/n):")
             if question == "y":
                 os.system("cls")
+
                 print("Terimakasih sudah menggunakan aplikasi kami.")
-                ulang = 0
+                sys.exit()
             elif question == "n":
                 print("Melanjutkan aplikasi.")
             else:
@@ -161,8 +164,7 @@ def menu_fungsi_member():
         isi_file = file.read()
         print(isi_file)
 
-    ulang = 1
-    while ulang == 1:
+    while True:
         memilih = input("Pilih menu (1/2/3): ")
 
         if memilih == "1":
@@ -173,8 +175,9 @@ def menu_fungsi_member():
             question = input("Apakah anda yakin untuk keluar aplikasi? (y/n): ")
             if question.lower() == "y":
                 os.system("cls")
+
                 print("Terimakasih sudah menggunakan aplikasi kami.")
-                ulang = 0
+                sys.exit()
             elif question.lower() == "n":
                 print("Melanjutkan aplikasi.")
             else:
@@ -203,6 +206,10 @@ def main():
         pilihan = input("Pilih menu (1/2/3/4/5/6): ")
         if pilihan == "1":
             jenis_padi = input("Masukkan jenis padi: ")
+            if jenis_padi == "":
+                print("Error: Jenis padi tidak boleh kosong!")
+                break
+
             while True:
                 try:
                     harga_bibit = float(input("Masukkan harga bibit: "))
@@ -312,9 +319,13 @@ def baca_dari_csv(nama_berkas):
     return df
 
 
-# menampilkan tabel
 def tampilkan_daftar_padi(df):
     os.system("cls")
+
+    # Menambah kolom 'Nomor' jika belum ada
+    if "Nomor" not in df.columns:
+        df.insert(0, "Nomor", range(1, len(df) + 1))
+
     df["Potensi Hasil"] = df["Potensi Hasil"].apply(
         lambda x: f"{x} (kg)" if "kg" not in str(x) else x
     )
@@ -322,7 +333,7 @@ def tampilkan_daftar_padi(df):
     print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
 
 
-# fungsi menambahkan data dari tabel
+# Fungsi lainnya
 def tambah_harga_padi(df, jenis_padi, harga_bibit, potensi_hasil, musim, umur):
     os.system("cls")
     if jenis_padi in df["Jenis Padi"].values:
@@ -330,7 +341,9 @@ def tambah_harga_padi(df, jenis_padi, harga_bibit, potensi_hasil, musim, umur):
         input("klik enter untuk mengulang...")
         main()
     else:
+        nomor_baru = len(df) + 1  # Nomor baru
         new_data = {
+            "Nomor": nomor_baru,
             "Jenis Padi": jenis_padi,
             "Harga Bibit": harga_bibit,
             "Potensi Hasil": potensi_hasil,
@@ -338,34 +351,47 @@ def tambah_harga_padi(df, jenis_padi, harga_bibit, potensi_hasil, musim, umur):
             "Umur": umur,
         }
         df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
-        print(f"{jenis_padi} berhasil ditambahkan ke dalam daftar harga padi.")
+        print(
+            f"{jenis_padi} berhasil ditambahkan ke dalam daftar harga padi dengan nomor {nomor_baru}."
+        )
         input("klik enter untuk melanjutkan...")
 
     return df
 
 
-# fungsi edit data pada tabel
 def edit_harga_padi(df, jenis_padi, harga_bibit, potensi_hasil, musim, umur):
     os.system("cls")
     if jenis_padi in df["Jenis Padi"].values:
         df.loc[
             df["Jenis Padi"] == jenis_padi,
-            ["Harga Bibit", "Potensi Hasil", "Musim", "Umur"],
-        ] = [harga_bibit, potensi_hasil, musim, umur]
+            ["Nomor", "Harga Bibit", "Potensi Hasil", "Musim", "Umur"],
+        ] = [
+            df[df["Jenis Padi"] == jenis_padi],
+            harga_bibit,
+            potensi_hasil,
+            musim,
+            umur,
+        ]
     else:
         print(f"{jenis_padi} tidak ditemukan dalam daftar harga padi.")
     return df
 
 
-# fungsi hapus data pada tabel
 def hapus_harga_padi(df, jenis_padi):
     os.system("cls")
     if jenis_padi in df["Jenis Padi"].values:
+        nomor_hapus = df[df["Jenis Padi"] == jenis_padi]["Nomor"].values[0]
         df = df[df["Jenis Padi"] != jenis_padi]
         df.reset_index(drop=True, inplace=True)
+        # Update kolom 'Nomor' setelah penghapusan
+        df["Nomor"] = range(1, len(df) + 1)
+        print(f"{jenis_padi} dengan nomor {nomor_hapus} telah dihapus.")
     else:
         print(f"{jenis_padi} tidak ditemukan dalam daftar harga padi.")
     return df
+
+
+2
 
 
 # fungsi simpan data ke dalam csv
@@ -388,31 +414,38 @@ def baca_dari_csv_pupuk(nama_file):
 # menampilkan tabel
 def tampilkan_daftar_pupuk(df):
     os.system("cls")
+
+    # Menambah kolom 'Nomor' jika belum ada
+    if "Nomor" not in df.columns:
+        df.insert(0, "Nomor", range(1, len(df) + 1))
+
     print("Daftar Harga Pupuk:")
     print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
 
 
-# fungsi menambahkan data dari tabel
 def tambah_harga_pupuk(df, padi, pupuk, harga_pupuk):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
-        print(f"{padi} sudah ada dalam tabel,masukkan jenis padi yang berbeda..")
+        print(f"{padi} sudah ada dalam tabel, masukkan jenis padi yang berbeda.")
         input("Klik enter untuk mengulang...")
         main_pupuk()
     else:
+        nomor_baru = len(df) + 1  # Nomor baru
         new_data = {
+            "Nomor": nomor_baru,
             "Jenis Padi": padi,
             "Pupuk": pupuk,
             "Harga Pupuk": harga_pupuk,
         }
         df = pd.concat([df, pd.DataFrame(new_data, index=[0])], ignore_index=True)
-        print(f"{padi} berhasil ditambahkan ke dalam daftar harga pupuk.")
+        print(
+            f"{padi} berhasil ditambahkan ke dalam daftar harga pupuk dengan nomor {nomor_baru}."
+        )
         input("Klik enter untuk melanjutkan")
 
     return df
 
 
-# fungsi edit data pada tabel
 def edit_harga_pupuk(df, padi, pupuk, harga_pupuk):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
@@ -421,18 +454,19 @@ def edit_harga_pupuk(df, padi, pupuk, harga_pupuk):
             ["Pupuk", "Harga Pupuk"],
         ] = [pupuk, harga_pupuk]
     else:
-        print(f"{padi} tidak ditemukan dalam daftar harga padi.")
+        print(f"{padi} tidak ditemukan dalam daftar harga pupuk.")
     return df
 
 
-# fungsi hapus data pada tabels
 def hapus_harga_pupuk(df, padi):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
         df = df[df["Jenis Padi"] != padi]
         df.reset_index(drop=True, inplace=True)
+        # Update kolom 'Nomor' setelah penghapusan
+        df["Nomor"] = range(1, len(df) + 1)
     else:
-        print(f"{padi} tidak ditemukan dalam daftar harga padi.")
+        print(f"{padi} tidak ditemukan dalam daftar harga pupuk.")
     return df
 
 
@@ -533,11 +567,15 @@ def baca_dari_csv_pestisida(nama_file):
 # menampilkan tabel pestisida
 def tampilkan_daftar_pestisida(df):
     os.system("cls")
+
+    # Menambah kolom 'Nomor' jika belum ada
+    if "Nomor" not in df.columns:
+        df.insert(0, "Nomor", range(1, len(df) + 1))
+
     print("Daftar Harga Pestisida : ")
     print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
 
 
-# fungsi menambahkan data dari tabel
 def tambah_harga_pestisida(df, padi, pestisida, harga_pestisida):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
@@ -546,6 +584,7 @@ def tambah_harga_pestisida(df, padi, pestisida, harga_pestisida):
         main_pestisida()
     else:
         new_data = {
+            "Nomor": len(df) + 1,  # Nomor baru
             "Jenis Padi": padi,
             "Pestisida": pestisida,
             "Harga Pestisida": harga_pestisida,
@@ -556,27 +595,27 @@ def tambah_harga_pestisida(df, padi, pestisida, harga_pestisida):
     return df
 
 
-# fungsi edit data pada tabel
 def edit_harga_pestisida(df, padi, pestisida, harga_pestisida):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
         df.loc[
             df["Jenis Padi"] == padi,
-            ["Pestisida", "Harga Pestisida"],
-        ] = [pestisida, harga_pestisida]
+            ["Nomor", "Pestisida", "Harga Pestisida"],
+        ] = [df[df["Jenis Padi"] == padi].index[0] + 1, pestisida, harga_pestisida]
     else:
-        print(f"{padi} tidak ditemukan dalam daftar harga padi.")
+        print(f"{padi} tidak ditemukan dalam daftar harga pestisida.")
     return df
 
 
-# fungsi hapus data pada tabel
 def hapus_harga_pestisida(df, padi):
     os.system("cls")
     if padi in df["Jenis Padi"].values:
         df = df[df["Jenis Padi"] != padi]
         df.reset_index(drop=True, inplace=True)
+        # Update kolom 'Nomor' setelah penghapusan
+        df["Nomor"] = range(1, len(df) + 1)
     else:
-        print(f"{padi} tidak ditemukan dalam daftar harga padi.")
+        print(f"{padi} tidak ditemukan dalam daftar harga pestisida.")
     return df
 
 
@@ -600,7 +639,7 @@ def main_pestisida():
     print("2. Edit Harga Pestisida")
     print("3. Hapus Jenis Pestisida")
     print("4. Kembali")
-    while True:
+    for _ in range(5):
         pilihan = input("Pilih menu (1/2/3/4): ")
 
         if pilihan == "1":
@@ -811,26 +850,15 @@ def main_kalkulasi():
     tampilkan_tabel_admin("data_csv/hasil_kalkulasi.csv")
 
 
-# hapus kalkulasi
-def hapus_kalkulasi(nama_file, indeks):
-    try:
-        df = pd.read_csv(nama_file)
-        if not df.empty:
-            df = df.drop(index=[indeks])
-            df.to_csv(nama_file, index=False)
-            print(f"Data kalkulasi pada indeks {indeks} telah dihapus.")
-        else:
-            print(f"File {nama_file} kosong.")
-    except FileNotFoundError:
-        print(f"File {nama_file} tidak ditemukan.")
-
-
-# tabel kalkulasi untuk member
+# Tampilkan tabel dengan nomor indeks untuk member
 def tampilkan_tabel(nama_file):
     os.system("cls")
     try:
         df = pd.read_csv(nama_file)
         if not df.empty:
+            # Menambah kolom 'Nomor' jika belum ada
+            if "Nomor" not in df.columns:
+                df.insert(0, "Nomor", range(1, len(df) + 1))
             print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
         else:
             print(f"File {nama_file} kosong.")
@@ -838,48 +866,55 @@ def tampilkan_tabel(nama_file):
         print(f"File {nama_file} tidak ditemukan.")
 
     print("1. Kembali")
-    memilih = input("pilih opsi : ")
+    memilih = input("Pilih opsi : ")
     if memilih == "1":
         menu_fungsi_member()
     else:
         tampilkan_tabel(nama_file)
 
 
-# tabel Kalkulasi untuk admin
+# Tampilkan tabel dengan nomor indeks untuk admin
 def tampilkan_tabel_admin(nama_file):
     os.system("cls")
     try:
         df = pd.read_csv(nama_file)
         if not df.empty:
+            # Menambah kolom 'Nomor' jika belum ada
+            if "Nomor" not in df.columns:
+                df.insert(0, "Nomor", range(1, len(df) + 1))
             print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
         else:
             print(f"File {nama_file} kosong.")
     except FileNotFoundError:
         print(f"File {nama_file} tidak ditemukan.")
 
-    print("1. mulai kalkulasi ")
-    print("2. Hapus kalkulasi")
-    print("3. Kembali")
-    memilih = input("pilih opsi : ")
+    print("1. Mulai kalkulasi ")
+    print("2. Kembali")
+    memilih = input("Pilih opsi : ")
     if memilih == "1":
         main_kalkulasi()
     elif memilih == "2":
-        hapus_kalkulasi()
-    elif memilih == "3":
         menu_fungsi_admin()
     else:
-        print("opsi tidak ditemukan")
+        print("Opsi tidak ditemukan")
         input("Klik enter untuk memilih ulang...")
         tampilkan_tabel_admin(nama_file)
 
 
 # ================fungsi hapus member===================
 # tabel data akun member
+# Tampilkan tabel member dengan nomor indeks di paling kiri
 def tampilkan_tabel_member():
     os.system("cls")
     df = pd.read_csv("data_csv/data_login.csv")
-    print("Tabel Keseluruhan:")
-    print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
+    if not df.empty:
+        # Menambah kolom 'Nomor' jika belum ada
+        if "Nomor" not in df.columns:
+            df.insert(0, "Nomor", range(1, len(df) + 1))
+        print("Tabel Keseluruhan:")
+        print(tabulate(df, headers="keys", tablefmt="pretty", showindex=False))
+    else:
+        print("Data member kosong.")
     menu_tabel_member()
 
 
@@ -938,3 +973,13 @@ def menu_tabel_member():
 
 
 menu_login()
+
+
+# memilih = int(input("pilih opsi:"))
+# while True:
+#     if memilih=="1":
+#         print("kodingan berhasil")
+#     elif memilih =="2":
+#         print("kodingan berjalan")
+#     else:
+#         print("ulang kodingan")
